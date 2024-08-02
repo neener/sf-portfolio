@@ -10,7 +10,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         await client.fetch(`*[_type == "artwork"]{_id, name}`);
-        await client.fetch(`*[_type == "event"]{_id, name}`);
+        await client.fetch(`*[_type == "exhibition"]{_id, name}`);
         await client.fetch(`*[_type == "commercial"]{_id, name}`);
         await client.fetch(`*[_type == "contact"]{_id, title}`);
       } catch (err) {
@@ -32,7 +32,7 @@ const Home = () => {
         <h2><a href="/artworks">Works</a></h2>
       </section>
       <section>
-        <h2><a href="/events">Exhibitions</a></h2>
+        <h2><a href="/exhibitions">Exhibitions</a></h2>
       </section>
       <section>
         <h2><a href="/contact">About</a></h2> 

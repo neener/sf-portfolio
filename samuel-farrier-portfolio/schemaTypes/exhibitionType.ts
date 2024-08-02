@@ -1,8 +1,8 @@
 import {defineField, defineType} from 'sanity'
 
-export const eventType = defineType({
-  name: 'event',
-  title: 'Event',
+export const exhibitionType = defineType({
+  name: 'exhibition',
+  title: 'Exhibition',
   type: 'document',
   fields: [
     defineField({
@@ -90,7 +90,33 @@ export const eventType = defineType({
       name: 'press',
       title: 'Press',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        {
+          type: 'block',
+          styles: [{ title: 'Normal', value: 'normal' }],
+          lists: [{ title: 'Bullet', value: 'bullet' }],
+          marks: {
+            decorators: [{ title: 'Strong', value: 'strong' }],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'URL',
+                fields: [
+                  {
+                    name: 'href',
+                    type: 'url',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          type: 'image',
+          options: { hotspot: true },
+        },
+      ],
     }),
     defineField({
       name: 'videos',
@@ -102,7 +128,33 @@ export const eventType = defineType({
       name: 'notes',
       title: 'Notes',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        {
+          type: 'block',
+          styles: [{ title: 'Normal', value: 'normal' }],
+          lists: [{ title: 'Bullet', value: 'bullet' }],
+          marks: {
+            decorators: [{ title: 'Strong', value: 'strong' }],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'URL',
+                fields: [
+                  {
+                    name: 'href',
+                    type: 'url',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          type: 'image',
+          options: { hotspot: true },
+        },
+      ],
     }),
   ],
 })

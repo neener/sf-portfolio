@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import client from '../lib/sanity';
+import { urlFor } from '../lib/sanityImage';
 
 interface Contact {
   title: string;
@@ -48,9 +49,14 @@ const ContactPage = () => {
       <p>Address: {contact.address}</p>
       <div>
         <h2>About</h2>
-        {contact.about?.map((block, index) => (
-          <p key={index}>{block.children[0]?.text}</p>
-        ))}
+        {contact.about?.map((block, index) => {
+          if (block._type === 'block') {
+            return <p key={index}>{block.children[0]?.text}</p>;
+          } else if (block._type === 'image') {
+            return <img key={index} src={urlFor(block).url()} alt="About image" />;
+          }
+          return null;
+        })}
       </div>
     </div>
   );

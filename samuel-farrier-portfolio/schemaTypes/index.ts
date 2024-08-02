@@ -1,6 +1,6 @@
 import {artworkType} from './artworkType'
-import {eventType} from './eventType'
+import {exhibitionType} from './exhibitionType'
 import {commercialType} from './commercialType'
 import { contactType } from './contactType'
 
-export const schemaTypes = [artworkType, eventType, commercialType, contactType]
+export const schemaTypes = [artworkType, exhibitionType, commercialType, contactType]

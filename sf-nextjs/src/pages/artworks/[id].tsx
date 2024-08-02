@@ -23,7 +23,8 @@ interface Artwork {
   purchase_price: number;
   price: number;
   notes: any[];
-  relatedEvent: any;
+  relatedExhibition: any;
+  category: string;
 }
 
 const ArtworkPage = () => {
@@ -119,12 +120,13 @@ const ArtworkPage = () => {
           <p key={index}>{block.children[0]?.text}</p>
         ))}
       </div>
-      {artwork.relatedEvent && (
+      {artwork.relatedExhibition && (
         <div>
-          <h2>Related Event</h2>
-          <p>{artwork.relatedEvent.name}</p>
+          <h2>Related Exhibition</h2>
+          <p>{artwork.relatedExhibition.name}</p>
         </div>
       )}
+      <p>Category: {artwork.category}</p>
     </div>
   );
 };
