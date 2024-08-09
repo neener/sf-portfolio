@@ -2,12 +2,15 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import client from '../../lib/sanity';
 import { urlFor } from '../../lib/sanityImage';
+import Link from 'next/link';
+import { PortableTextBlock } from '@sanity/types';
 
 interface Exhibition {
   _id: string;
   name: string;
   year: number;
-  date: string;
+  startDate: string;
+  endDate: string;  
   city: string;
   venue_name: string;
   venue_type: string;
@@ -16,9 +19,13 @@ interface Exhibition {
   show_type: string;
   curator: string;
   images: any[];
-  press: any[];
+  press: PortableTextBlock[];
   videos: string[];
-  notes: any[];
+  notes: PortableTextBlock[];
+  relatedArtwork: {
+    _id: string;
+    name: string;
+  };
 }
 
 const ExhibitionPage = () => {
@@ -33,7 +40,37 @@ const ExhibitionPage = () => {
     if (id) {
       const fetchExhibition = async () => {
         try {
-          const data = await client.fetch(`*[_id == "${id}"][0]`);
+          const data = await client.fetch(`
+            *[_id == "${id}"][0] {
+              _id,
+              name,
+              year,
+              startDate,
+              endDate,
+              city,
+              venue_name,
+              venue_type,
+              url,
+              address,
+              show_type,
+              curator,
+              images[] {
+                asset->{
+                  _id,
+                  url
+                },
+                caption,
+                alt
+              },
+              press,
+              videos,
+              notes,
+              relatedArtwork-> {
+                _id,
+                name
+              }
+            }
+          `);
           setExhibition(data);
         } catch (err) {
           console.error("Failed to fetch exhibition:", err);
@@ -63,7 +100,8 @@ const ExhibitionPage = () => {
     <div>
       <h1>{exhibition.name}</h1>
       <p>Year: {exhibition.year}</p>
-      <p>Date: {new Date(exhibition.date).toLocaleDateString()}</p>
+      <p>Start Date: {new Date(exhibition.startDate).toLocaleDateString()}</p> 
+      <p>End Date: {new Date(exhibition.endDate).toLocaleDateString()}</p> 
       <p>City: {exhibition.city}</p>
       <p>Venue Name: {exhibition.venue_name}</p>
       <p>Venue Type: {exhibition.venue_type}</p>
@@ -75,17 +113,66 @@ const ExhibitionPage = () => {
       <p>Curator: {exhibition.curator}</p>
 
       <div>
-        <h2>Images</h2>
-        {exhibition.images?.map((image, index) => (
-          <img key={index} src={urlFor(image).url()} alt={`Exhibition Image ${index + 1}`} />
-        ))}
+        {exhibition.images && (
+          <div>
+            <strong>Images:</strong>
+            {exhibition.images.map(image => (
+              <div key={image._key}>
+                <img
+                  src={urlFor(image.asset).url()}
+                  alt={image.alt}
+                  style={{ maxWidth: '500px', width: '100%', height: 'auto' }}
+                />
+                <p>{image.caption}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div>
         <h2>Press</h2>
-        {exhibition.press?.map((block, index) => (
-          <p key={index}>{block.children[0]?.text}</p>
-        ))}
+        {exhibition.press?.map((block, index) => {
+          if (block._type === 'block') {
+            return (
+              <p key={index}>
+                {block.children?.map((child: any, childIndex: number) => {
+                  const linkMark = child.marks?.find((mark: string) => {
+                    return block.markDefs?.some((def) => def._key === mark && def._type === 'link');
+                  });
+
+                  if (linkMark) {
+                    const link = block.markDefs?.find((def) => def._key === linkMark);
+                    return (
+                      <a
+                        key={childIndex}
+                        href={link?.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: 'blue', textDecoration: 'underline' }}
+                      >
+                        {child.text}
+                      </a>
+                    );
+                  }
+                  return <span key={childIndex}>{child.text}</span>;
+                })}
+              </p>
+            );
+          } else if (block._type === 'image') {
+            return (
+              block.asset && (
+                <img
+                  key={index}
+                  src={urlFor(block).url()}
+                  alt="Press image"
+                  style={{ maxWidth: '500px', width: '100%' }}
+                />
+              )
+            );
+          }
+          return null;
+        })}
       </div>
 
       <div>
@@ -97,10 +184,57 @@ const ExhibitionPage = () => {
 
       <div>
         <h2>Notes</h2>
-        {exhibition.notes?.map((block, index) => (
-          <p key={index}>{block.children[0]?.text}</p>
-        ))}
+        {exhibition.notes?.map((block, index) => {
+          if (block._type === 'block') {
+            return (
+              <p key={index}>
+                {block.children?.map((child: any, childIndex: number) => {
+                  // Find the mark definitions for links
+                  const linkMark = child.marks?.find((mark: string) => {
+                    return block.markDefs?.some((def) => def._key === mark && def._type === 'link');
+                  });
+
+                  if (linkMark) {
+                    const link = block.markDefs?.find((def) => def._key === linkMark);
+                    return (
+                      <a
+                        key={childIndex}
+                        href={link?.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: 'blue', textDecoration: 'underline' }}
+                      >
+                        {child.text}
+                      </a>
+                    );
+                  }
+                  return <span key={childIndex}>{child.text}</span>;
+                })}
+              </p>
+            );
+          } else if (block._type === 'image') {
+            return (
+              <img
+                key={index}
+                src={urlFor(block).url()}
+                alt="Notes image"
+                style={{ maxWidth: '500px', width: '100%' }}
+              />
+            );
+          }
+          return null;
+        })}
       </div>
+      {exhibition.relatedArtwork && (
+        <div>
+          <h2>Related Artwork</h2>
+          <p>
+            <Link href={`/artworks/${exhibition.relatedArtwork._id}`}>
+              {exhibition.relatedArtwork.name}
+            </Link>
+          </p>
+        </div>
+      )}
     </div>
   );
 };

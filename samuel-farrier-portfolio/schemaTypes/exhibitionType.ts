@@ -25,8 +25,13 @@ export const exhibitionType = defineType({
       type: 'number',
     }),
     defineField({
-      name: 'date',
-      title: 'Date',
+      name: 'startDate',
+      title: 'Start Date',
+      type: 'datetime',
+    }),
+    defineField({
+      name: 'endDate',
+      title: 'End Date',
       type: 'datetime',
     }),
     defineField({
@@ -155,6 +160,12 @@ export const exhibitionType = defineType({
           options: { hotspot: true },
         },
       ],
+    }),
+    defineField({
+      name: 'relatedArtwork',
+      title: 'Related Artwork',
+      type: 'reference',
+      to: [{ type: 'artwork' }],
     }),
   ],
 })
