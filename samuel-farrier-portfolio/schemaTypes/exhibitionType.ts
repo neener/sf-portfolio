@@ -161,11 +161,11 @@ export const exhibitionType = defineType({
         },
       ],
     }),
-    defineField({
-      name: 'relatedArtwork',
-      title: 'Related Artwork',
-      type: 'reference',
-      to: [{ type: 'artwork' }],
-    }),
+    {
+      name: 'relatedArtworks',
+      title: 'Related Artworks',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'artwork' } }]
+    },
   ],
 })

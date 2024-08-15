@@ -22,10 +22,10 @@ interface Exhibition {
   press: PortableTextBlock[];
   videos: string[];
   notes: PortableTextBlock[];
-  relatedArtwork: {
+  relatedArtworks?: Array<{
     _id: string;
     name: string;
-  };
+  }>;
 }
 
 const ExhibitionPage = () => {
@@ -65,7 +65,7 @@ const ExhibitionPage = () => {
               press,
               videos,
               notes,
-              relatedArtwork-> {
+              relatedArtworks[]-> {
                 _id,
                 name
               }
@@ -225,14 +225,16 @@ const ExhibitionPage = () => {
           return null;
         })}
       </div>
-      {exhibition.relatedArtwork && (
+      {exhibition?.relatedArtworks && exhibition?.relatedArtworks.length > 0 &&(
         <div>
-          <h2>Related Artwork</h2>
-          <p>
-            <Link href={`/artworks/${exhibition.relatedArtwork._id}`}>
-              {exhibition.relatedArtwork.name}
-            </Link>
-          </p>
+          <h2>Related Artworks</h2>
+          {exhibition?.relatedArtworks.map((artwork, index) => (
+             <p key={index}>
+             <Link href={`/artworks/${artwork._id}`}>
+               {artwork.name}
+             </Link>
+           </p>
+          ))}
         </div>
       )}
     </div>

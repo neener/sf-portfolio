@@ -179,12 +179,12 @@ export const artworkType = defineType({
         },
       ],
     }),
-    defineField({
-      name: 'relatedExhibition',
-      title: 'Related Exhibition',
-      type: 'reference',
-      to: [{ type: 'exhibition' }],
-    }),
+    {
+      name: 'relatedExhibitions',
+      title: 'Related Exhibitions',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'exhibition' } }]
+    },
     defineField({
       name: 'category',
       title: 'Category',

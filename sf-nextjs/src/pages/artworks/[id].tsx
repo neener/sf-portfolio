@@ -25,10 +25,10 @@ interface Artwork {
   purchase_price: number;
   price: number;
   notes: PortableTextBlock[];
-  relatedExhibition: {
+  relatedExhibitions?: Array<{
     _id: string;
     name: string;
-  };
+  }>;
   category: string;
 }
 
@@ -66,12 +66,10 @@ const ArtworkPage = () => {
               price,
               notes,
               category,
-              "relatedExhibition": relatedExhibition->{
+              relatedExhibitions[]-> {
                 _id,
-                name,
-                date,
-                location
-              }
+                name
+              },
             }
           `);
           setArtwork(data);
@@ -276,16 +274,20 @@ const ArtworkPage = () => {
           return null;
         })}
       </div>
-      {artwork.relatedExhibition && (
+
+      {artwork?.relatedExhibitions && artwork?.relatedExhibitions.length > 0 && (
         <div>
-          <h2>Related Exhibition</h2>
-          <p>
-            <Link href={`/exhibitions/${artwork.relatedExhibition._id}`}>
-              {artwork.relatedExhibition.name}
-            </Link>
-          </p>
+          <h2>Related Exhibitions</h2>
+          {artwork?.relatedExhibitions.map((exhibition, index) => (
+             <p key={index}>
+             <Link href={`/exhibitions/${exhibition._id}`}>
+               {exhibition.name}
+             </Link>
+           </p>
+          ))}
         </div>
       )}
+
       <p>Category: {artwork.category}</p>
     </div>
   );
