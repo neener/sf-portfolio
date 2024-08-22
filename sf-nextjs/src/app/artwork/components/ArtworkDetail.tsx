@@ -35,7 +35,7 @@ const ArtworkDetail: React.FC<ArtworkDetailProps> = ({ artwork }) => {
   if (!artwork) {
     return <div>Artwork not found</div>;
   }
-
+  console.log(artwork.notes);
   return (
     <div>
       <h1>{artwork.name}</h1>
@@ -77,27 +77,23 @@ const ArtworkDetail: React.FC<ArtworkDetailProps> = ({ artwork }) => {
       )}
 
       {/* Images */}
-      {artwork.images?.length > 0 && (
-        <div>
-          <strong>Images:</strong>
-         
-          {artwork.images.map((image, imageIndex) => (
-            <div key={image._key || `image-${imageIndex}`}>
-               {console.log(image)}
-               {image.asset && image.asset.url ? (
-                  <img
-                    src={image.asset.url}  // Directly use the URL from the asset object
-                    alt={image.alt || 'Artwork image'}
-                    style={{ maxWidth: '500px', width: '100%' }}
-                  />
-                ) : (
-                  <p>No image available</p>  // Optional fallback if no image is available
-                )}
-              {image.caption && <p>{image.caption}</p>}
-            </div>
-          ))}
-        </div>
-      )}
+      <div>
+        {artwork.images && (
+          <div>
+            <strong>Images:</strong>
+            {artwork.images.map(image => (
+              <div key={image._key}>
+                <img
+                  src={urlFor(image.asset).url()}
+                  alt={image.alt}
+                  style={{ maxWidth: '500px', width: '100%', height: 'auto' }}
+                />
+                <p>{image.caption}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Videos */}
       {artwork.videos && Array.isArray(artwork.videos) && artwork.videos.length > 0 && (
@@ -188,37 +184,54 @@ const ArtworkDetail: React.FC<ArtworkDetailProps> = ({ artwork }) => {
       )}
 
       {/* Price */}
-      {artwork.price !== null && <p>Price: {artwork.price}</p>}
+      {/* {artwork.price !== null && <p>Price: {artwork.price}</p>} */}
 
-      {/* Notes */}
+     {/* Notes */}
       {artwork.notes?.length > 0 && (
         <div>
           <h2>Notes</h2>
-          {artwork.notes.map((block, index) => (
-            <p key={index}>
-              {block.children?.map((child: any, childIndex: number) => {
-                const linkMark = child.marks?.find((mark: string) => {
-                  return block.markDefs?.some((def) => def._key === mark && def._type === 'link');
-                });
+          {artwork.notes.map((block, index) => {
+            // Handle different block types (e.g., block of text or image)
+            if (block._type === 'block') {
+              return (
+                <p key={index}>
+                  {block.children?.map((child: any, childIndex: number) => {
+                    const linkMark = child.marks?.find((mark: string) => {
+                      return block.markDefs?.some((def) => def._key === mark && def._type === 'link');
+                    });
 
-                if (linkMark) {
-                  const link = block.markDefs?.find((def) => def._key === linkMark);
-                  return (
-                    <a
-                      key={childIndex}
-                      href={link?.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: 'blue', textDecoration: 'underline' }}
-                    >
-                      {child.text}
-                    </a>
-                  );
-                }
-                return <span key={childIndex}>{child.text}</span>;
-              })}
-            </p>
-          ))}
+                    if (linkMark) {
+                      const link = block.markDefs?.find((def) => def._key === linkMark);
+                      return (
+                        <a
+                          key={childIndex}
+                          href={link?.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: 'blue', textDecoration: 'underline' }}
+                        >
+                          {child.text}
+                        </a>
+                      );
+                    }
+                    return <span key={childIndex}>{child.text}</span>;
+                  })}
+                </p>
+              );
+            } else if (block._type === 'image') {
+              // Handle image block
+              return (
+                <img
+                  key={index}
+                  src={urlFor(block).url()}
+                  alt="Note image"
+                  style={{ maxWidth: '500px', width: '100%' }}
+                />
+              );
+            } else {
+              return null; // Fallback for unhandled block types
+            }
+          })}
         </div>
       )}
 

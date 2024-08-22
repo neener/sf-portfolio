@@ -21,36 +21,34 @@ const Home = () => {
     setLoading(true);
     setError(null);
     try {
-      const artworkResponse = await client.fetch(`*[_type == "artwork"]{
-        _id,
-        name,
-        year,
-        date,
-        dimensions,
-        medium,
-        description[]{
-          ...,
-          children[]{
-            ...
-          }
-        },
-        images[]{
-          asset->{url},
-          caption
-        },
-        videos,
-        press[]{
-          ...,
-          children[]{
-            ...
-          }
-        },
-        relatedExhibitions[]->{
+      const artworkResponse = await client.fetch(`
+        *[_type == "artwork"]{
           _id,
-          name
-        },
-        category
-      }`);
+          name,
+          year,
+          date,
+          dimensions,
+          medium,
+          description,
+          images,
+          videos,
+          press,
+          visibility,
+          exhibited,
+          exhibitionLink,
+          available,
+          buyer,
+          date_purchased,
+          purchase_price,
+          price,
+          notes,
+          category,
+          relatedExhibitions[]-> {
+            _id,
+            name
+          },
+        }
+      `);
       setArtworks(artworkResponse);
     } catch (err) {
       console.error("Failed to fetch artworks from Sanity:", err);
@@ -65,24 +63,37 @@ const Home = () => {
     setLoading(true);
     setError(null);
     try {
-      const exhibitionResponse = await client.fetch(`*[_type == "exhibition"]{
-        _id,
-        name,
-        year,
-        startDate,
-        endDate,
-        city,
-        venue_name,
-        venue_type,
-        images[]{
-          asset->{url},
-          caption
-        },
-        relatedArtworks[]->{
+      const exhibitionResponse = await client.fetch(`
+        *[_type == "exhibition"]{
           _id,
-          name
+          name,
+          year,
+          startDate,
+          endDate,
+          city,
+          venue_name,
+          venue_type,
+          url,
+          address,
+          show_type,
+          curator,
+          images[] {
+            asset->{
+              _id,
+              url
+            },
+            caption,
+            alt
+          },
+          press,
+          videos,
+          notes,
+          relatedArtworks[]-> {
+            _id,
+            name
+          }
         }
-      }`);
+      `);
       setExhibitions(exhibitionResponse);
     } catch (err) {
       console.error("Failed to fetch exhibitions from Sanity:", err);
