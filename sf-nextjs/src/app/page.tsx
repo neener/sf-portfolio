@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import client from '../lib/sanity';
 import ArtworkListItem from './artwork/components/ArtworkListItem';
-import ExhibitionListItem from './exhibition/components/ExhibitionListItem'; // Make sure the import path is correct
+import ExhibitionListItem from './exhibition/components/ExhibitionListItem';
+import CommercialListItem from './components/CommercialListItem';
 import { PortableText } from '@portabletext/react';
 import { urlFor } from '../lib/sanityImage'; // Assuming this is your image helper
 
@@ -11,6 +12,7 @@ const Home = () => {
   const [selected, setSelected] = useState<string | null>(null);
   const [artworks, setArtworks] = useState<any[]>([]);
   const [exhibitions, setExhibitions] = useState<any[]>([]);
+  const [commercials, setCommercials] = useState<any[]>([]);
   const [contactData, setContactData] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -103,6 +105,32 @@ const Home = () => {
     }
   };
 
+  // Fetch commercials
+  const fetchCommercials = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const commercialResponse = await client.fetch(`
+        *[_type == "commercial"]{
+          _id,
+          name,
+          date,
+          images,
+          description,
+          photographer,
+          stylist,
+          category
+        }
+      `);
+      setCommercials(commercialResponse);
+    } catch (err) {
+      console.error("Failed to fetch commercials from Sanity:", err);
+      setError("Failed to fetch commercial data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch contact data
   const fetchContact = async () => {
     setLoading(true);
@@ -134,12 +162,14 @@ const Home = () => {
       fetchArtworks();
     } else if (type === "exhibition") {
       fetchExhibitions();
+    } else if (type === "commercial") {
+      fetchCommercials(); 
     } else if (type === "contact") {
       fetchContact();
     }
   };
 
-  // Toggle expanding the details of an artwork or exhibition
+  // Toggle expanding the details of an artwork or exhibition etc
   const toggleExpand = (id: string) => {
     setExpandedItemId(prevId => (prevId === id ? null : id)); // Collapse if the same ID is clicked
   };
@@ -201,6 +231,21 @@ const Home = () => {
                   exhibition={exhibition}
                   expanded={expandedItemId === exhibition._id}
                   onClick={() => toggleExpand(exhibition._id)}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+         {/* Render Commercials */}
+         {!loading && !error && selected === "commercial" && (
+          <ul>
+            {commercials.map((commercial) => (
+              <li key={commercial._id} className="py-2">
+                <CommercialListItem
+                  commercial={commercial}
+                  expanded={expandedItemId === commercial._id}
+                  onClick={() => toggleExpand(commercial._id)}
                 />
               </li>
             ))}
