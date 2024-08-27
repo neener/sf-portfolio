@@ -99,60 +99,90 @@ const ArtworkDetail: React.FC<ArtworkDetailProps> = ({ artwork }) => {
       {artwork.videos && Array.isArray(artwork.videos) && artwork.videos.length > 0 && (
         <div>
           <h2>Videos</h2>
-          {artwork.videos.map((video, index) => (
-            <iframe key={`video-${index}`} src={video} frameBorder="0" allowFullScreen></iframe>
-          ))}
+          {artwork.videos.map((videoUrl, index) => {
+            const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
+            const isVimeo = videoUrl.includes('vimeo.com');
+
+            return (
+              <div key={`video-${index}`}>
+                {isYouTube ? (
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={videoUrl.replace('watch?v=', 'embed/')}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : isVimeo ? (
+                  <iframe
+                    src={videoUrl.replace('vimeo.com', 'player.vimeo.com/video')}
+                    width="640"
+                    height="360"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <a href={videoUrl} target="_blank" rel="noopener noreferrer">
+                    {videoUrl}
+                  </a>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
-{/* Press */}
-{artwork.press?.length > 0 && (
-  <div>
-    <h2>Press</h2>
-    {artwork.press.map((block, index) => {
-      // Handle different block types (e.g., block of text or image)
-      if (block._type === 'block') {
-        return (
-          <p key={index}>
-            {block.children?.map((child: any, childIndex: number) => {
-              const linkMark = child.marks?.find((mark: string) => {
-                return block.markDefs?.some((def) => def._key === mark && def._type === 'link');
-              });
+      {/* Press */}
+      {artwork.press?.length > 0 && (
+        <div>
+          <h2>Press</h2>
+          {artwork.press.map((block, index) => {
+            // Handle different block types (e.g., block of text or image)
+            if (block._type === 'block') {
+              return (
+                <p key={index}>
+                  {block.children?.map((child: any, childIndex: number) => {
+                    const linkMark = child.marks?.find((mark: string) => {
+                      return block.markDefs?.some((def) => def._key === mark && def._type === 'link');
+                    });
 
-              if (linkMark) {
-                const link = block.markDefs?.find((def) => def._key === linkMark);
-                return (
-                  <a
-                    key={childIndex}
-                    href={link?.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: 'blue', textDecoration: 'underline' }}
-                  >
-                    {child.text}
-                  </a>
-                );
-              }
-              return <span key={childIndex}>{child.text}</span>;
-            })}
-          </p>
-        );
-      } else if (block._type === 'image') {
-        // Handle image block
-        return (
-          <img
-            key={index}
-            src={urlFor(block).url()}
-            alt="Press image"
-            style={{ maxWidth: '500px', width: '100%' }}
-          />
-        );
-      } else {
-        return null; // Fallback for unhandled block types
-      }
-    })}
-  </div>
-)}
+                    if (linkMark) {
+                      const link = block.markDefs?.find((def) => def._key === linkMark);
+                      return (
+                        <a
+                          key={childIndex}
+                          href={link?.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: 'blue', textDecoration: 'underline' }}
+                        >
+                          {child.text}
+                        </a>
+                      );
+                    }
+                    return <span key={childIndex}>{child.text}</span>;
+                  })}
+                </p>
+              );
+            } else if (block._type === 'image') {
+              // Handle image block
+              return (
+                <img
+                  key={index}
+                  src={urlFor(block).url()}
+                  alt="Press image"
+                  style={{ maxWidth: '500px', width: '100%' }}
+                />
+              );
+            } else {
+              return null; // Fallback for unhandled block types
+            }
+          })}
+        </div>
+      )}
 
       {/* Visibility */}
       {artwork.visibility && <p>Visibility: {artwork.visibility}</p>}

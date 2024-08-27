@@ -18,6 +18,7 @@ interface Exhibition {
   press: PortableTextBlock[];
   notes: PortableTextBlock[];
   relatedArtworks?: Array<{ _id: string; name: string }>;
+  videos?: string[];
 }
 
 interface ExhibitionDetailProps {
@@ -38,24 +39,21 @@ const ExhibitionDetail: React.FC<ExhibitionDetailProps> = ({ exhibition }) => {
       <p>Show Type: {exhibition.show_type}</p>
       {exhibition.url && <p>Website: <a href={exhibition.url} target="_blank" rel="noopener noreferrer">{exhibition.url}</a></p>}
 
-
       {/* Images */}
       {exhibition.images?.length > 0 && (
         <div>
           <strong>Images:</strong>
-         
           {exhibition.images.map((image, imageIndex) => (
             <div key={image._key || `image-${imageIndex}`}>
-               {console.log(image)}
-               {image.asset && image.asset.url ? (
-                  <img
-                    src={image.asset.url}  // Directly use the URL from the asset object
-                    alt={image.alt || 'Artwork image'}
-                    style={{ maxWidth: '500px', width: '100%' }}
-                  />
-                ) : (
-                  <p>No image available</p>  // Optional fallback if no image is available
-                )}
+              {image.asset && image.asset.url ? (
+                <img
+                  src={image.asset.url}  // Directly use the URL from the asset object
+                  alt={image.alt || 'Artwork image'}
+                  style={{ maxWidth: '500px', width: '100%' }}
+                />
+              ) : (
+                <p>No image available</p>  // Optional fallback if no image is available
+              )}
               {image.caption && <p>{image.caption}</p>}
             </div>
           ))}
@@ -99,6 +97,46 @@ const ExhibitionDetail: React.FC<ExhibitionDetailProps> = ({ exhibition }) => {
               <a href={`/artwork/${artwork._id}`} target="_blank" rel="noopener noreferrer">{artwork.name}</a>
             </p>
           ))}
+        </div>
+      )}
+
+      {/* Videos */}
+      {exhibition.videos?.length > 0 && (
+        <div>
+          <h2>Videos</h2>
+          {exhibition.videos.map((videoUrl, index) => {
+            const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
+            const isVimeo = videoUrl.includes('vimeo.com');
+
+            return (
+              <div key={index}>
+                {isYouTube ? (
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={videoUrl.replace('watch?v=', 'embed/')}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : isVimeo ? (
+                  <iframe
+                    src={videoUrl.replace('vimeo.com', 'player.vimeo.com/video')}
+                    width="640"
+                    height="360"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <a href={videoUrl} target="_blank" rel="noopener noreferrer">
+                    {videoUrl}
+                  </a>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
