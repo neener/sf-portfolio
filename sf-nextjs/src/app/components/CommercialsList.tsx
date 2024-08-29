@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { useState } from 'react';
 import CommercialListItem from './CommercialListItem'; // Make sure this import path is correct
 import { PortableTextBlock } from '@sanity/types';

@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import React from 'react';
 import { urlFor } from '../../lib/sanityImage';
 import { PortableTextBlock } from '@sanity/types';

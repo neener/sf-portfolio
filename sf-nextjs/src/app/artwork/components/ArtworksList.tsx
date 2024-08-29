@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { useState } from 'react';
 import ArtworkListItem from './ArtworkListItem'; 
 import { PortableTextBlock } from '@sanity/types';

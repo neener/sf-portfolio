@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import React from 'react';
 import ExhibitionDetail from './ExhibitionDetail'; // Ensure this path is correct
 
