@@ -159,7 +159,7 @@ const Home = () => {
   // Handle menu click and determine what to fetch
   const handleClick = (type: string) => {
     setSelected(type);
-    setExpandedItemId(null); // Reset expanded item when switching categories
+    setExpandedItemId(null); 
 
     if (type === "artwork") {
       fetchArtworks();
