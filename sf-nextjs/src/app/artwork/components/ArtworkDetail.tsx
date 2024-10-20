@@ -89,7 +89,7 @@ const ArtworkDetail: React.FC<ArtworkDetailProps> = ({ artwork }) => {
                 <img
                   src={urlFor(image.asset).url()}
                   alt={image.alt}
-                  style={{ maxWidth: '500px', width: '100%', height: 'auto' }}
+                  // style={{ maxWidth: '500px', width: '100%', height: 'auto' }}
                 />
                 <p>{image.caption}</p>
               </div>
@@ -177,7 +177,7 @@ const ArtworkDetail: React.FC<ArtworkDetailProps> = ({ artwork }) => {
                   key={index}
                   src={urlFor(block).url()}
                   alt="Press image"
-                  style={{ maxWidth: '500px', width: '100%' }}
+                  // style={{ maxWidth: '500px', width: '100%' }}
                 />
               );
             } else {
@@ -258,7 +258,7 @@ const ArtworkDetail: React.FC<ArtworkDetailProps> = ({ artwork }) => {
                   key={index}
                   src={urlFor(block).url()}
                   alt="Note image"
-                  style={{ maxWidth: '500px', width: '100%' }}
+                  // style={{ maxWidth: '500px', width: '100%' }}
                 />
               );
             } else {
