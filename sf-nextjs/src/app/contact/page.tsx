@@ -3,10 +3,96 @@
 import { useEffect, useState } from 'react';
 import client from '../../lib/sanity';
 import { PortableText } from '@portabletext/react';
-import { urlFor } from '../../lib/sanityImage'; // Assuming this is your image helper
+import { urlFor } from '../../lib/sanityImage';
+
+const MailchimpForm = () => {
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMessage('');
+
+    try {
+      // Redirecting to the Mailchimp action URL with the email
+      const actionURL = `https://gmail.us22.list-manage.com/subscribe/post?u=c51b8d1989d515cd66be11e95&id=02d6493d6c&f_id=00bdd8e1f0`;
+      const form = document.createElement('form');
+      form.action = actionURL;
+      form.method = 'POST';
+      form.target = '_blank';
+
+      const emailInput = document.createElement('input');
+      emailInput.type = 'hidden';
+      emailInput.name = 'EMAIL';
+      emailInput.value = email;
+      form.appendChild(emailInput);
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+
+      setMessage('Success! You are now subscribed.');
+      setEmail('');
+    } catch (error) {
+      setMessage('An error occurred. Please try again.');
+    }
+  };
+
+  return (
+    <div id="mc_embed_signup" style={{ background: '#fff', fontFamily: 'Helvetica, Arial, sans-serif', width: '600px', padding: '20px', borderRadius: '8px' }}>
+      <h2>Subscribe</h2>
+      <form onSubmit={handleSubscribe} className="validate">
+        <div id="mc_embed_signup_scroll">
+          <p className="indicates-required">
+            <span className="asterisk">*</span> indicates required
+          </p>
+          <div className="mc-field-group">
+            <label htmlFor="mce-EMAIL">
+              Email Address <span className="asterisk">*</span>
+            </label>
+            <input
+              type="email"
+              name="EMAIL"
+              className="required email"
+              id="mce-EMAIL"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ padding: '8px', margin: '5px 0', borderRadius: '4px', width: '100%' }}
+            />
+          </div>
+          <div id="mce-responses" className="clear foot">
+            <div className="response" id="mce-error-response" style={{ display: 'none' }}></div>
+            <div className="response" id="mce-success-response" style={{ display: 'none' }}></div>
+          </div>
+          <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
+            {/* real people should not fill this in and expect good things - do not remove this or risk form bot signups */}
+            <input type="text" name="b_c51b8d1989d515cd66be11e95_02d6493d6c" tabIndex={-1} defaultValue="" />
+          </div>
+          <div className="clear foot">
+            <input type="submit" name="subscribe" className="button" value="Subscribe" style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', borderRadius: '4px', cursor: 'pointer' }} />
+          </div>
+        </div>
+      </form>
+      {message && <p style={{ marginTop: '10px', color: 'green' }}>{message}</p>}
+      <p style={{ margin: '10px auto' }}>
+        <a href="http://eepurl.com/iWyW6E" title="Mailchimp - email marketing made easy and fun">
+          <span style={{ display: 'inline-block', backgroundColor: 'transparent', borderRadius: '4px' }}>
+            <img
+              className="refferal_badge"
+              src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg"
+              alt="Intuit Mailchimp"
+              style={{ width: '220px', height: '40px', display: 'flex', padding: '2px 0', justifyContent: 'center', alignItems: 'center' }}
+            />
+          </span>
+        </a>
+      </p>
+    </div>
+  );
+};
 
 const ContactPage = () => {
-  const [contact, setContact] = useState<any | null>(null); // Store the contact data
+  const [contact, setContact] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,37 +144,11 @@ const ContactPage = () => {
           }}
         />
       </div>
-      <div id="mc_embed_shell">
-      <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css">
-  <style type="text/css">
-        #mc_embed_signup{background:#fff; false;clear:left; font:14px Helvetica,Arial,sans-serif; width: 600px;}
-        /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
-           We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-</style>
-<div id="mc_embed_signup">
-    <form action="https://gmail.us22.list-manage.com/subscribe/post?u=c51b8d1989d515cd66be11e95&amp;id=02d6493d6c&amp;f_id=00bdd8e1f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
-        <div id="mc_embed_signup_scroll"><h2>Subscribe</h2>
-            <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
-            <div class="mc-field-group"><label for="mce-EMAIL">Email Address <span class="asterisk">*</span></label><input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required="" value=""></div>
-        <div id="mce-responses" class="clear foot">
-            <div class="response" id="mce-error-response" style="display: none;"></div>
-            <div class="response" id="mce-success-response" style="display: none;"></div>
-        </div>
-    <div aria-hidden="true" style="position: absolute; left: -5000px;">
-        /* real people should not fill this in and expect good things - do not remove this or risk form bot signups */
-        <input type="text" name="b_c51b8d1989d515cd66be11e95_02d6493d6c" tabindex="-1" value="">
-    </div>
-        <div class="optionalParent">
-            <div class="clear foot">
-                <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
-                <p style="margin: 0px auto;"><a href="http://eepurl.com/iWyW6E" title="Mailchimp - email marketing made easy and fun"><span style="display: inline-block; background-color: transparent; border-radius: 4px;"><img class="refferal_badge" src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" style="width: 220px; height: 40px; display: flex; padding: 2px 0px; justify-content: center; align-items: center;"></span></a></p>
-            </div>
-        </div>
-    </div>
-</form>
-</div>
-<script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script><script type="text/javascript">(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';}(jQuery));var $mcj = jQuery.noConflict(true);</script></div>
 
+      {/* Mailchimp Form */}
+      <div className="mt-8">
+        <MailchimpForm />
+      </div>
     </div>
   );
 };
