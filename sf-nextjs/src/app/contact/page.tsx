@@ -43,6 +43,8 @@ const ContactPage = () => {
   return (
     <div className="p-4">
       <Head>
+        {/* Load jQuery */}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLR4Xyc4V9cMR5YXw9y3Um4MOmXZJvZ5PF5i5bOgYb" crossOrigin="anonymous"></script>
         <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css" />
         <script src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js" async></script>
       </Head>
