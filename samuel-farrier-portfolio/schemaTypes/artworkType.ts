@@ -186,9 +186,10 @@ export const artworkType = defineType({
       of: [{ type: 'reference', to: { type: 'exhibition' } }]
     },
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{ type: 'string' }],
       options: {
         list: [
           { title: 'Painting', value: 'painting' },
@@ -199,7 +200,7 @@ export const artworkType = defineType({
           { title: 'Book', value: 'book' },
           { title: 'Other', value: 'other' },
         ],
-        layout: 'dropdown',
+        layout: 'tags', // Allows you to add multiple options as tags
       },
     }),
   ],
