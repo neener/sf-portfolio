@@ -3,94 +3,10 @@
 import { useEffect, useState } from 'react';
 import client from '../../lib/sanity';
 import { PortableText } from '@portabletext/react';
-import { urlFor } from '../../lib/sanityImage';
-
-const MailchimpForm = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage('');
-
-    try {
-      const actionURL = `https://gmail.us22.list-manage.com/subscribe/post?u=c51b8d1989d515cd66be11e95&id=02d6493d6c&f_id=00bdd8e1f0`;
-      const form = document.createElement('form');
-      form.action = actionURL;
-      form.method = 'POST';
-      form.target = '_blank';
-
-      const emailInput = document.createElement('input');
-      emailInput.type = 'hidden';
-      emailInput.name = 'EMAIL';
-      emailInput.value = email;
-      form.appendChild(emailInput);
-
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
-
-      setMessage('Success! You are now subscribed.');
-      setEmail('');
-    } catch (error) {
-      setMessage('An error occurred. Please try again.');
-    }
-  };
-
-  return (
-    <div id="mc_embed_signup" style={{ background: '#fff', fontFamily: 'Helvetica, Arial, sans-serif', width: '600px', padding: '20px', borderRadius: '8px' }}>
-      <h2>Subscribe</h2>
-      <form onSubmit={handleSubscribe} className="validate">
-        <div id="mc_embed_signup_scroll">
-          <p className="indicates-required">
-            <span className="asterisk">*</span> indicates required
-          </p>
-          <div className="mc-field-group">
-            <label htmlFor="mce-EMAIL">
-              Email Address <span className="asterisk">*</span>
-            </label>
-            <input
-              type="email"
-              name="EMAIL"
-              className="required email"
-              id="mce-EMAIL"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ padding: '8px', margin: '5px 0', borderRadius: '4px', width: '100%' }}
-            />
-          </div>
-          <div id="mce-responses" className="clear foot">
-            <div className="response" id="mce-error-response" style={{ display: 'none' }}></div>
-            <div className="response" id="mce-success-response" style={{ display: 'none' }}></div>
-          </div>
-          <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
-            <input type="text" name="b_c51b8d1989d515cd66be11e95_02d6493d6c" tabIndex={-1} defaultValue="" />
-          </div>
-          <div className="clear foot">
-            <input type="submit" name="subscribe" className="button" value="Subscribe" style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', borderRadius: '4px', cursor: 'pointer' }} />
-          </div>
-        </div>
-      </form>
-      {message && <p style={{ marginTop: '10px', color: 'green' }}>{message}</p>}
-      <p style={{ margin: '10px auto' }}>
-        <a href="http://eepurl.com/iWyW6E" title="Mailchimp - email marketing made easy and fun">
-          <span style={{ display: 'inline-block', backgroundColor: 'transparent', borderRadius: '4px' }}>
-            <img
-              className="refferal_badge"
-              src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg"
-              alt="Intuit Mailchimp"
-              style={{ width: '220px', height: '40px', display: 'flex', padding: '2px 0', justifyContent: 'center', alignItems: 'center' }}
-            />
-          </span>
-        </a>
-      </p>
-    </div>
-  );
-};
+import { urlFor } from '../../lib/sanityImage'; // Assuming this is your image helper
 
 const ContactPage = () => {
-  const [contact, setContact] = useState<any | null>(null);
+  const [contact, setContact] = useState<any | null>(null); // Store the contact data
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -143,9 +59,6 @@ const ContactPage = () => {
         />
       </div>
       
-      <div className="mt-8">
-        <MailchimpForm />
-      </div>
     </div>
   );
 };
