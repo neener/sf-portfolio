@@ -3,11 +3,10 @@
 import { useEffect, useState } from 'react';
 import client from '../../lib/sanity';
 import { PortableText } from '@portabletext/react';
-import { urlFor } from '../../lib/sanityImage';
-import MailchimpEmbedForm from './MailchimpEmbedForm'; // Adjust the path if needed
+import { urlFor } from '../../lib/sanityImage'; // Assuming this is your image helper
 
 const ContactPage = () => {
-  const [contact, setContact] = useState<any | null>(null);
+  const [contact, setContact] = useState<any | null>(null); // Store the contact data
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,9 +42,7 @@ const ContactPage = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">{contact.title}</h1>
-      <p className="text-lg">
-        Email: <a href={`mailto:${contact.email}`} className="text-blue-600 underline">{contact.email}</a>
-      </p>
+      <p className="text-lg">Email: <a href={`mailto:${contact.email}`} className="text-blue-600 underline">{contact.email}</a></p>
       <p className="text-lg">Address: {contact.address}</p>
 
       <div className="mt-6">
@@ -60,10 +57,6 @@ const ContactPage = () => {
             },
           }}
         />
-      </div>
-
-      <div className="mt-8">
-        <MailchimpEmbedForm />
       </div>
     </div>
   );
