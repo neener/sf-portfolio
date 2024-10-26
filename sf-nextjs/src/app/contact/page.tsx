@@ -142,8 +142,7 @@ const ContactPage = () => {
           }}
         />
       </div>
-
-      {/* Mailchimp Form */}
+      
       <div className="mt-8">
         <MailchimpForm />
       </div>
