@@ -14,7 +14,6 @@ const MailchimpForm = () => {
     setMessage('');
 
     try {
-      // Redirecting to the Mailchimp action URL with the email
       const actionURL = `https://gmail.us22.list-manage.com/subscribe/post?u=c51b8d1989d515cd66be11e95&id=02d6493d6c&f_id=00bdd8e1f0`;
       const form = document.createElement('form');
       form.action = actionURL;
@@ -66,7 +65,6 @@ const MailchimpForm = () => {
             <div className="response" id="mce-success-response" style={{ display: 'none' }}></div>
           </div>
           <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
-            {/* real people should not fill this in and expect good things - do not remove this or risk form bot signups */}
             <input type="text" name="b_c51b8d1989d515cd66be11e95_02d6493d6c" tabIndex={-1} defaultValue="" />
           </div>
           <div className="clear foot">
