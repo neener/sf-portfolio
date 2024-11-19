@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom CSS for Navigation List */
+.nav-list {
+  list-style-type: none; /* Remove bullets */
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  cursor: pointer; /* Hand pointer on hover */
+}
+
+.nav-sublist {
+  list-style-type: none; /* Remove bullets for sublist */
+  padding: 0;
+  margin: 0;
+}
+
+.nav-subitem {
+  cursor: pointer; /* Hand pointer on hover */
+}
+
+.image-max-width {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+  margin: 1rem 0; /* Optional spacing */
+}
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
